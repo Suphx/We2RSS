@@ -20,10 +20,10 @@ def build_db_col_session(db_name, col_name, db_url, port=27017):
     return collection_session
 
 
-def insert_docs(docs_list, passage_title, col_name=COL_NAME):
+def insert_docs(docs_list, passage_link, col_name=COL_NAME):
     col_session = build_db_col_session(DB_NAME, col_name, DB_URL)
     try:
-        filter_name = {"passage_title": passage_title}
+        filter_name = {"passage_link": passage_link}
         col_session.update_many(filter=filter_name, update=docs_list, upsert=True)
     except Exception as e:
         logger.error(str(e))
