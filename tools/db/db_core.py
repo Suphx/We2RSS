@@ -7,15 +7,16 @@
 # Description: 
 # Question:
 
+from tools.common.const import DB_HOST, DB_NAME, DB_PORT, DB_USER, DB_PASSWORD
 from tools.logger import logger
 import pymysql
 
 # 数据库连接参数
-db_host = 'localhost'
-db_port = 3306
-db_user = 'root'
-db_password = '123456'
-db_name = 'wechat_official_account_passage_rss'
+db_host = DB_HOST
+db_port = DB_PORT
+db_user = DB_USER
+db_password = DB_PASSWORD
+db_name = DB_NAME
 
 
 # 初始化日志
@@ -35,15 +36,14 @@ def search_wechat_account_is_existed(official_account_name):
     # 使用 cursor() 方法创建一个游标对象 cursor
     cursor = db.cursor()
     # SQL 查询语句
-    sql = "SELECT id FROM wechat_account_list \
+    sql = "SELECT id, offical_account_name FROM wechat_account_list \
            WHERE official_account_name = '{}'".format(official_account_name)
     try:
         # 执行SQL语句
         cursor.execute(sql)
         # 获取所有记录列表
-        results = cursor.fetchall()
-        official_account_id = results[0][0]
-        return official_account_id
+        official_account_info = cursor.fetchall()
+        return official_account_info
     except:
         logger.info("没有查询到对应公众号，将新建公众号映射。")
         official_account_id = insert_wechat_account(official_account_name)

@@ -170,4 +170,4 @@ def get_lastest_history_passage(query):
 
 
 if __name__ == '__main__':
-    get_lastest_history_passage("南航青年志愿者")
+    get_lastest_history_passage("CodeSheep")

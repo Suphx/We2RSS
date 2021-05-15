@@ -32,7 +32,7 @@ def insert_docs(docs_list, passage_link, col_name=COL_NAME):
         print("新增文档失败。")
 
 
-def find_docs(query, col_name):
+def find_docs(query, col_name=COL_NAME):
     col_session = build_db_col_session(DB_NAME, col_name, DB_URL)
     try:
         find_doc = col_session.find(query)

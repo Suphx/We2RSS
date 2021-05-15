@@ -8,11 +8,12 @@
 
 from tools.thread.threadpool import thread_runner
 from tools.core.request_history_article import get_lastest_history_passage
+from tools.core.rss_static_file_generator import generate_subscribe_rss
 from tools.logger import logger
-
+from tools.common.const import CDN_ROOT
 
 from flask_cors import CORS
-from flask import Flask, request, send_file, jsonify
+from flask import Flask
 from flask_restful import reqparse
 
 # 初始化日志
@@ -37,6 +38,18 @@ def do_get_history_passages_api():
         print(str(e))
         logger.error(str(e))
         return "Error with {}".format(e)
+
+
+@app.route('/api/v1/generateRss', methods=['POST'])
+def do_generate_rss_api():
+    args = reqparse.RequestParser(). \
+        add_argument('OfficialAccountName', type=str). \
+        parse_args()
+    official_account_name = args['OfficialAccountName']
+    # generate_subscribe_rss(official_account_name)
+    thread_runner(1, generate_subscribe_rss, official_account_name)
+    return "{}rss_service/{}.xml".format(CDN_ROOT, official_account_name)
+
 
 if __name__ == "__main__":
     app.run(host="192.168.50.241", port=8443, debug=True)

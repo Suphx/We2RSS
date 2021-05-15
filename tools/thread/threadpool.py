@@ -7,8 +7,8 @@
 # @Description:
 
 from concurrent.futures import ThreadPoolExecutor
-from tools.core.request_history_article import get_lastest_history_passage
+
 
 def thread_runner(thread_num, func, *args):
     executor = ThreadPoolExecutor(thread_num)
-    executor.submit(get_lastest_history_passage, *args)
+    executor.submit(func, *args)
