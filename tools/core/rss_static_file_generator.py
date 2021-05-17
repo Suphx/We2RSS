@@ -9,7 +9,7 @@
 
 from tools.db.docs_db_core import find_docs
 from tools.db.db_core import search_wechat_account_is_existed
-from tools.db.oss_core import upload_file
+from tools.db.oss_core import upload_file, flush_resource
 from tools.core.passage_extractor import resolve_passage_from_url
 from tools.common.const import OUTPUT_ROOT_DIR
 from tools.cache.localcache import update_log
@@ -26,7 +26,6 @@ def generate_subscribe_rss(official_account_name):
         if update_log[official_account_name] == time.strftime('%Y-%m-%d',time.localtime(time.time())):
             return
     else:
-        update_log[official_account_name] = time.strftime('%Y-%m-%d',time.localtime(time.time()))
         official_account_id= search_wechat_account_is_existed(official_account_name)
         query = {'official_account_id':official_account_id}
         result = list(find_docs(query))[:8]
@@ -34,12 +33,14 @@ def generate_subscribe_rss(official_account_name):
         for doc in result:
             passage_title = doc['passage_title']
             passage_link = doc['passage_link']
-            description = resolve_passage_from_url(passage_link)
+            description = resolve_passage_from_url(passage_link, official_account_name)
             rss_item = generate_rss_item(passage_title, passage_link, description)
             rss_items_list.append(rss_item)
-        rss_file_path = gen_rss(official_account_name, rss_items_list, os.path.join(OUTPUT_ROOT_DIR,'rss'))
-        upload_file(rss_file_path, "{}/{}.xml".format('rss_service', official_account_name))
-
+        if len(result) != 0:
+            rss_file_path = gen_rss(official_account_name, rss_items_list, os.path.join(OUTPUT_ROOT_DIR,'rss'))
+            res_url = upload_file(rss_file_path, "{}/{}.xml".format('rss_service', official_account_name))
+            flush_resource(res_url)
+            update_log[official_account_name] = time.strftime('%Y-%m-%d', time.localtime(time.time()))
 
 def generate_rss_item(passage_title, passage_link, passage_value):
     rss_item = PyRSS2Gen.RSSItem(
@@ -65,4 +66,4 @@ def gen_rss(subscriber, rssitems, output_dir):
 
 
 if __name__ == '__main__':
-    generate_subscribe_rss("CodeSheep")
+    pass

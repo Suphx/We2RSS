@@ -13,6 +13,7 @@ import re
 import random
 import time
 import logging
+from tools.common.const import COOKIES_PATH
 from tools.logger import logger
 from tools.db import db_core, docs_db_core
 from dateutil import parser
@@ -41,9 +42,10 @@ def get_lastest_history_passage(query):
     urllib3.disable_warnings()  # 关闭警告
 
     # 读取登陆成功后获取到的cookies
-    with open('cookies.txt', 'r', encoding='utf-8') as f:
+    with open(COOKIES_PATH, 'r', encoding='utf-8') as f:
         cookie = f.read()
     cookies = json.loads(cookie)
+    print("Cookies loading successfully.")
     # 增加重试连接次数
     session = requests.Session()
     session.keep_alive = False

@@ -6,4 +6,5 @@
 # @Project : We2RSS
 # @Description:
 
+# 用于记录当日某公众号的RSS推送是否已经生成过
 update_log = dict()

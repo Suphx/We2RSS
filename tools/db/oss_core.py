@@ -7,8 +7,8 @@
 # @Description:
 
 from tools.common import utils
-from tools.common.const import ACCESS_KEY, SECRET_KEY, BUCKET_NAME, CDN_ROOT
-from qiniu import Auth, put_file, etag
+from tools.common.const import ACCESS_KEY, SECRET_KEY, BUCKET_NAME, CDN_ROOT, OUTPUT_ROOT_DIR
+from qiniu import Auth, put_file, etag, CdnManager
 
 import requests
 import os
@@ -21,7 +21,7 @@ q = Auth(access_key, secret_key)
 # 要上传的空间
 bucket_name = BUCKET_NAME
 # 本地缓存
-img_tmp_dir = r'E:\PythonProject\We2RSS\output'
+img_tmp_dir = OUTPUT_ROOT_DIR
 # cdn根路径
 cdn_root = CDN_ROOT
 
@@ -61,5 +61,17 @@ def upload_file(localfile, key):
     return cdn_root + key
 
 
+def flush_resource(url):
+    cdn_manager = CdnManager(q)
+    # 需要刷新的文件链接
+    urls = [
+        url
+    ]
+    # 刷新链接
+    refresh_url_result = cdn_manager.refresh_urls(urls)
+    print(refresh_url_result)
+
+
 if __name__ == '__main__':
-    download_img('https://mmbiz.qpic.cn/mmbiz_jpg/lJxjkdq8Pqo4lXCg5VhETicg6AicouR5FntfDj0tgrQAUPAJlibWCLzgI89CY7FpDKn3ibTLufOEMwlaWIiaPY6iayJQ/640?wx_fmt=jpeg', 'jpeg')
+    flush_resource('http://rss.suphxlin-tech.com/rss_service/CodeSheep.xml')
+    # download_img('https://mmbiz.qpic.cn/mmbiz_jpg/lJxjkdq8Pqo4lXCg5VhETicg6AicouR5FntfDj0tgrQAUPAJlibWCLzgI89CY7FpDKn3ibTLufOEMwlaWIiaPY6iayJQ/640?wx_fmt=jpeg', 'jpeg')
