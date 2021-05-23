@@ -42,6 +42,7 @@ def generate_subscribe_rss(official_account_name):
             flush_resource(res_url)
             update_log[official_account_name] = time.strftime('%Y-%m-%d', time.localtime(time.time()))
 
+
 def generate_rss_item(passage_title, passage_link, passage_value):
     rss_item = PyRSS2Gen.RSSItem(
         title = passage_title,

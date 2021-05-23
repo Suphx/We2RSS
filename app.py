@@ -10,6 +10,7 @@ from tools.thread.threadpool import thread_runner
 from tools.core.request_history_article import get_lastest_history_passage
 from tools.core.rss_static_file_generator import generate_subscribe_rss
 from tools.db.db_core import search_wechat_account_is_existed, insert_wechat_account
+from tools.db.docs_db_core import count_docs_exist, find_docs
 from tools.logger import logger
 from tools.common.const import CDN_ROOT
 
@@ -65,6 +66,34 @@ def do_generate_rss_api():
     return "{}rss_service/{}.xml".format(CDN_ROOT, official_account_name)
 
 
+@app.route('/api/v1/statistics', methods=['GET'])
+def do_generate_statistic_api():
+    result = count_docs_exist()
+    message_head = "累计收录推文统计:\n"
+    message = list()
+    result = list(result)
+    for sta in result:
+        mes = "{}:{}篇".format(sta['official_account_name'][0], sta['count'])
+        message.append(mes)
+    mess = "\n".join(message)
+    return message_head + mess
+
+
+@app.route('/api/v1/searchPassage', methods=['POST'])
+def do_search_history_passage_api():
+    args = reqparse.RequestParser(). \
+        add_argument('PassageTitle', type=str). \
+        parse_args()
+    PassageTitle = args['PassageTitle']
+    # query = {"passage_title": {"$regex": PassageTitle}}
+    query = {"$text": {"$search": PassageTitle}}
+    result = find_docs(query)
+    result = list(result)[:5]
+    his_passage = {}
+    for res in result:
+        his_passage[res['passage_title']] = res['passage_link']
+    return his_passage
+
+
 if __name__ == "__main__":
-    # app.run(host="127.0.0.1", port=8443, debug=True)
-    print("<?xml version="'"{}"'"encoding="'"{}"'"?>".format('1.0','utf-8'))
+    app.run(host="127.0.0.1", port=8443, debug=True)

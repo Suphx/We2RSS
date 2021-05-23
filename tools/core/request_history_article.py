@@ -154,10 +154,14 @@ def get_lastest_history_passage(query):
                     content_create_time = item.get('create_time')  # 文章发布时间
                     content_update_time = item.get('update_time')  # 文章更新时间
                     # 组装MongoDB插入数据
-                    docs = {"passage_title": content_title, "official_account_id": official_account_id, "passage_link":content_link, "passage_create_time":time_format(content_create_time), "passage_update_time":time_format(content_update_time)}
+                    docs = {"passage_title": content_title,
+                            "official_account_id": official_account_id,
+                            "passage_link":content_link,
+                            "passage_create_time":time_format(content_create_time),
+                            "passage_update_time":time_format(content_update_time)}
                     docs_mongo = {"$set":docs}
 
-                    db_core.insert_account_passage_link(content_title, content_link, official_account_id)  # MySQL数据库更新
+                    db_core.insert_account_passage_link(content_title, content_link, official_account_id)      # MySQL数据库更新
                     docs_db_core.insert_docs(docs_mongo, passage_link=content_link)                            # MongoDB数据库更新
 
             num -= 1
@@ -172,4 +176,4 @@ def get_lastest_history_passage(query):
 
 
 if __name__ == '__main__':
-    get_lastest_history_passage("CodeSheep")
+    pass

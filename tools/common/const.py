@@ -8,7 +8,7 @@
 
 
 # MySQL数据库配置
-DB_HOST = '192.168.2.131'
+DB_HOST = '127.0.0.1'
 DB_PORT = 3306
 DB_USER = 'root'
 DB_PASSWORD = '123456'
@@ -16,9 +16,9 @@ DB_NAME = 'wechat_official_account_passage_rss'
 
 # MongoDB数据库配置
 MONGODB_NAME = "we2rss"
-MONGODB_URL = "192.168.2.131"
+MONGODB_URL = "127.0.0.1"
 MONGODB_COL_NAME = "passage_collections"
-MONGODB_PORT = 47017
+MONGODB_PORT = 27017
 
 # 七牛云配置
 ACCESS_KEY = 'xxxx'
@@ -33,4 +33,4 @@ OUTPUT_ROOT_DIR = r'd:\Python\Project\We2RSS\output'
 LOGGER_DIR = r"d:\Python\Project\We2RSS\log"
 
 # Cookies路径
-COOKIES_PATH = r"d:\Python\Project\We2RSS\cookies.txt"
+COOKIES_PATH = r"e:\PythonProject\We2RSS\cookies.txt"

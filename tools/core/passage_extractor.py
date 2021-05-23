@@ -7,6 +7,7 @@
 # @Description:
 
 from tools.db.oss_core import download_img, upload_file
+from tools.db.docs_db_core import insert_file_into_gridfs
 from tools.common.utils import generate_filename
 from tools.common.const import OUTPUT_ROOT_DIR
 
@@ -44,6 +45,7 @@ def resolve_passage_from_url(passage_url, official_account_name):
         if img_tag.has_attr('data-src'):
             localfile, img_filename = download_img(img_tag.attrs['data-src'], official_account_name, passage_uuid, img_tag.attrs['data-type'])
             oss_path = upload_file(localfile, '{}/{}'.format("image", img_filename))
+            insert_file_into_gridfs(localfile)
             img_tag.attrs['src'] = oss_path
 
     output_html = """
@@ -61,11 +63,9 @@ def resolve_passage_from_url(passage_url, official_account_name):
     f = open(os.path.join(OUTPUT_ROOT_DIR, official_account_name, '{}.html'.format(title)), mode='w', encoding='utf8')
     f.write(output_html)
     f.close()
+    insert_file_into_gridfs(os.path.join(OUTPUT_ROOT_DIR, official_account_name, '{}.html'.format(title)))
     return output_html
 
 
 if __name__ == '__main__':
-    html_content = str(resolve_passage_from_url("https://mp.weixin.qq.com/s?__biz=MzA3MTM4Mzk0OQ==&mid=2670429416&idx=1&sn=c759306da07e97a64f1d5f2f40d24af6&chksm=85f14a0ab286c31ce1aae31e2d8e95df4e232d90dc08b4aaf50402ad20a2c6ca4fb88994872d#rd"))
-    # title = 'X乎万赞：互联网行业目前最有潜力的岗位有哪些?.html'
-    # title = re.sub(r'[\\\\/:*?\"<>|]', '', title)
-    # print(title)
+    pass

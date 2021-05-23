@@ -36,6 +36,24 @@ def connect():
         exit()
 
 
+def search_wechat_account():
+    # 使用 cursor() 方法创建一个游标对象 cursor
+    db = connect()
+    cursor = db.cursor()
+    # SQL 查询语句
+    sql = "SELECT id, official_account_name FROM wechat_account_list"
+    try:
+        # 执行SQL语句
+        cursor.execute(sql)
+        # 关闭MySQLClient
+        official_account_info = cursor.fetchall()
+        cursor.close()
+        db.close()
+        return official_account_info
+    except:
+        logger.info("Do not find the official account in database, now starting to build a account map.")
+
+
 def search_wechat_account_is_existed(official_account_name):
     # 使用 cursor() 方法创建一个游标对象 cursor
     db = connect()
